@@ -126,8 +126,9 @@
             return
          end if
          
-!          b% s1% job% warn_run_star_extras = .false.
-          extras_binary_startup = keep_going
+!        b% s1% job% warn_run_star_extras = .false.
+         extras_binary_startup = keep_going
+
       end function  extras_binary_startup
       
       integer function extras_binary_start_step(binary_id,ierr)
@@ -153,6 +154,15 @@
             return
          end if  
          extras_binary_check_model = keep_going
+
+         ! calculate mass transfer duration
+         ! adds timestep to mass transfer duration when the primary is filling its Roche Lobe
+         ! due to bug with xtra this cannot be put in extras finish step
+         if (b% r(1) > b% rl(1)) then 
+            b% xtra(1) = b% xtra(1) + b% time_step
+            write(*,*) 'dt = ', b% time_step
+            write(*,*) 'Mass transfer duration (yrs) = ', b% xtra(1)
+         end if
         
       end function extras_binary_check_model
       
@@ -160,14 +170,43 @@
       ! returns either keep_going or terminate.
       ! note: cannot request retry; extras_check_model can do that.
       integer function extras_binary_finish_step(binary_id)
+         use chem_lib, only : chem_M_div_h
+         use colors_lib, only : get_abs_mag_by_name, get_abs_bolometric_mag, get_bc_by_name
          type (binary_info), pointer :: b
          integer, intent(in) :: binary_id
          integer :: ierr
+         integer :: k
+         real(dp) :: m_div_h, abs_mag_V
+         real(dp) :: test_log_Teff = 2.0, test_logg = 0.0, test_m_div_h = 0.0
          call binary_ptr(binary_id, b, ierr)
          if (ierr /= 0) then ! failure in  binary_ptr
             return
          end if  
          extras_binary_finish_step = keep_going
+
+         !!!!
+         ! V band problems when logg drops below 2.5 but then fine again when Teff drops below 10500
+         ! 10000.0 2.0 -0.5
+         ! 10500.0 2.0 -0.5
+         ! 11000.0 2.5 -0.5
+         ! 10000.0 2.0 -1.0
+         ! 10500.0 2.0 -1.0
+         ! 11000.0 2.5 -1.0
+         !!!!
+         ! use routine from colors/public/colors_lib.f90 to calculate V band magnitude
+         k = b% s1% photosphere_cell_k
+         m_div_h = chem_M_div_h(b% s1% X(k), b% s1% Z(k), b% s1% job% initial_zfracs)
+
+         abs_mag_V = get_abs_mag_by_name('V', safe_log10(b% s1% Teff), &
+               b% s1% photosphere_logg, m_div_h, b% s1% photosphere_L, ierr)
+
+         write(*,*) safe_log10(b% s1% Teff), b% s1% photosphere_logg, m_div_h, b% s1% photosphere_L
+         ! write(*,*) get_abs_bolometric_mag(b% s1% photosphere_L)
+         ! write(*,*) get_bc_by_name('V', safe_log10(b% s1% Teff), b% s1% photosphere_logg, m_div_h, ierr)
+         write(*,*) abs_mag_V
+         ! write(*,*) get_abs_mag_by_name('bb_V', test_log_Teff, test_logg, test_m_div_h, b% s1% photosphere_L, ierr)
+
+
 
          if (b% r(1) > b% rl(1) .and. .not. b% lxtra(ilx_reached_rlo)) then 
             ! things to do upon the first RLOF is reached
@@ -220,6 +259,7 @@
             ! b% s2% min_q_for_drag = 0.5
             b% s2% make_gradr_sticky_in_solver_iters = .true.
          end if
+
          
       end function extras_binary_finish_step
       
@@ -230,7 +270,10 @@
          call binary_ptr(binary_id, b, ierr)
          if (ierr /= 0) then ! failure in  binary_ptr
             return
-         end if      
+         end if 
+
+      ! print mass transfer duration
+      write(*,*) 'Mass transfer duration (yrs) = ', b% xtra(1)
          
  
       end subroutine extras_binary_after_evolve     
