@@ -44,7 +44,7 @@
 
   ! Where to put the output files for the star
     log_directory = 'LOGS2'
-    photo_directory = 'photos2'
+    ! photo_directory = 'photos2'
 
   ! Store the screenlong from the star
     extra_terminal_output_file = 'log2'
