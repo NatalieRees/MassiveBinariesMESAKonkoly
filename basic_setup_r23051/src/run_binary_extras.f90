@@ -295,7 +295,7 @@
          write(*,*) 'Mass transfer duration (yrs) = ', b% xtra(1)
          write(*,*) 'Fraction of total lifetime = ', b% xtra(1)/b% binary_age
          write(*,*) 'Post-interaction lifetime (yrs) = ', b% xtra(2)
-         write(*,*) 'Duration of post-interaction phase where primary dominates in the optical (yrs) = ', b% xtra(5)
+         write(*,*) 'Primary dominating V band Post-interaction duration (yrs) = ', b% xtra(5)
          write(*,*) 'Thermal timescale of primary (yrs) = ', b% s1% kh_timescale
          write(*,*) 'Nuclear timescale of primary (yrs) = ', b% s1% nuc_timescale
          
