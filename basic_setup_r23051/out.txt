@@ -1,5 +1,5 @@
 DATE: 2023-07-11
-TIME: 10:05:16
+TIME: 12:22:47
 
 
  reading user weak rate file /home/natalierees/mesa-r23.05.1/data/rates_data/rate_tables/S13_r_be7_wk_li7.h5
@@ -64,7 +64,7 @@ load saved model ZAMS_model_14.mod
  kap_option gs98
  kap_CO_option gs98_co
  kap_lowT_option lowT_fa05_gs98
-                                        OMP_NUM_THREADS           1
+                                        OMP_NUM_THREADS           4
 
 
 
@@ -80,7 +80,7 @@ load saved model ZAMS_model_12.mod
  kap_option gs98
  kap_CO_option gs98_co
  kap_lowT_option lowT_fa05_gs98
-                                        OMP_NUM_THREADS           1
+                                        OMP_NUM_THREADS           4
 
 
 
@@ -5438,6 +5438,9 @@ bin     315  19.165156  2.506E+02  1.050E+02  0.000E+00   3.358143          0   
 
  save photos/b_x315, photos/1_x315, photos/2_x315 for model         315
  Mass transfer duration (yrs) =    11264.947783948395     
+ Fraction of total lifetime =    7.2900695140128179E-004
+ Time at the end of RLOF (yrs) =    14251437.156268081     
+ Post-interaction lifetime (yrs) =    1201018.7665391713     
 termination code: xa_central_lower_limit
 __________________________________________________________________________________________________________________________________________________
 
@@ -5462,4 +5465,4 @@ ________________________________________________________________________________
  1.5536E+07   0.954931   4.520739 -99.000000 -99.000000  -9.074057   0.000000   0.000033   0.000357   0.003297  0.610E-09  max increase
 
 DATE: 2023-07-11
-TIME: 10:24:13
+TIME: 12:28:28

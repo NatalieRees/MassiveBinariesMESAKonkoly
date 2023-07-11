@@ -166,6 +166,11 @@
             ! write(*,*) 'dt = ', b% time_step
             ! write(*,*) 'Mass transfer duration (yrs) = ', b% xtra(1)
          end if
+
+         ! if rlof has already occured and primary is no longer filling its roche lobe then mass transfer has finished
+         if (b% r(1) < b% rl(1) .and. b% lxtra(ilx_reached_rlo) .and. (b% xtra(2)==0)) then 
+            b% xtra(2) = b% binary_age
+         end if
         
       end function extras_binary_check_model
       
@@ -280,11 +285,12 @@
             return
          end if 
 
-      ! print mass transfer duration
-      write(*,*) 'Mass transfer duration (yrs) = ', b% xtra(1)
-      write(*,*) 'Fraction of total lifetime = ', b% xtra(1)/b% binary_age
+         ! print mass transfer duration
+         write(*,*) 'Mass transfer duration (yrs) = ', b% xtra(1)
+         write(*,*) 'Fraction of total lifetime = ', b% xtra(1)/b% binary_age
+         write(*,*) 'Time at the end of RLOF (yrs) = ', b% xtra(2)
+         write(*,*) 'Post-interaction lifetime (yrs) = ', b% binary_age-b% xtra(2)
          
- 
       end subroutine extras_binary_after_evolve     
       
       end module run_binary_extras

@@ -23,7 +23,6 @@
    do_j_accretion = .false. ! accretion of angular momentum 
    do_tidal_sync = .false.  ! tides
 
-
    ! Mass transfer efficiency controls
    mass_transfer_alpha = 0d0      ! fraction of mass lost from the vicinity of donor as fast wind
    mass_transfer_beta = 0.6d0       ! fraction of mass lost from the vicinity of accretor as fast wind
