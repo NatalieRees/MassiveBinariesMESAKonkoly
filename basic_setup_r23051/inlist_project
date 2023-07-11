@@ -36,14 +36,15 @@
    ! Mass transfer scheme
    mdot_scheme = "Kolb" 
 
-   fr = 0.2 !0.05        ! change of relative Roche lobe gap (default 0.01)
+   ! relax timestep controls
+   fr = 0.5 !0.2 !0.05        ! change of relative Roche lobe gap (default 0.01)
    fr_dt_limit = 5d2     ! Mimumum timestep limit allowed for fr in years
    fj = 0.05             ! change of orbital angular momentum
-   fm = 0.05   ! default 0.01, envelope mass
+   fm = 0.1 !0.05   ! default 0.01, envelope mass
    fdm = 0.05  ! default 0.005, fractional mass change of either star
-   fa = 0.05   ! default 0.01, binary separation
-
    fdm_hard = 0.1
+   fa = 0.05   ! default 0.01, binary separation
+   fa_hard = 0.04d0
 
    min_mdot_for_implicit = 1d-7
    implicit_scheme_tolerance = 1d-1

@@ -95,7 +95,7 @@
       integer function how_many_extra_binary_history_columns(binary_id)
          use binary_def, only: binary_info
          integer, intent(in) :: binary_id
-         how_many_extra_binary_history_columns = 0
+         how_many_extra_binary_history_columns = 1
       end function how_many_extra_binary_history_columns
 
 
@@ -112,6 +112,9 @@
             write(*,*) 'failed in binary_ptr'
             return
          end if
+
+         names(1) = 'rlof_duration'
+         vals(1) = b% xtra(1)
          
       end subroutine data_for_extra_binary_history_columns
       
@@ -160,8 +163,8 @@
          ! due to bug with xtra this cannot be put in extras finish step
          if (b% r(1) > b% rl(1)) then 
             b% xtra(1) = b% xtra(1) + b% time_step
-            write(*,*) 'dt = ', b% time_step
-            write(*,*) 'Mass transfer duration (yrs) = ', b% xtra(1)
+            ! write(*,*) 'dt = ', b% time_step
+            ! write(*,*) 'Mass transfer duration (yrs) = ', b% xtra(1)
          end if
         
       end function extras_binary_check_model
@@ -193,19 +196,24 @@
          ! 10500.0 2.0 -1.0
          ! 11000.0 2.5 -1.0
          !!!!
+
          ! use routine from colors/public/colors_lib.f90 to calculate V band magnitude
+
+         ! primary
          k = b% s1% photosphere_cell_k
          m_div_h = chem_M_div_h(b% s1% X(k), b% s1% Z(k), b% s1% job% initial_zfracs)
-
          abs_mag_V = get_abs_mag_by_name('V', safe_log10(b% s1% Teff), &
                b% s1% photosphere_logg, m_div_h, b% s1% photosphere_L, ierr)
+         ! write(*,*) safe_log10(b% s1% Teff), b% s1% photosphere_logg, m_div_h, b% s1% photosphere_L
+         write(*,*) 'primary V band mag = ', abs_mag_V
 
-         write(*,*) safe_log10(b% s1% Teff), b% s1% photosphere_logg, m_div_h, b% s1% photosphere_L
-         ! write(*,*) get_abs_bolometric_mag(b% s1% photosphere_L)
-         ! write(*,*) get_bc_by_name('V', safe_log10(b% s1% Teff), b% s1% photosphere_logg, m_div_h, ierr)
-         write(*,*) abs_mag_V
-         ! write(*,*) get_abs_mag_by_name('bb_V', test_log_Teff, test_logg, test_m_div_h, b% s1% photosphere_L, ierr)
-
+         ! secondary
+         k = b% s2% photosphere_cell_k
+         m_div_h = chem_M_div_h(b% s2% X(k), b% s2% Z(k), b% s2% job% initial_zfracs)
+         abs_mag_V = get_abs_mag_by_name('V', safe_log10(b% s2% Teff), &
+               b% s2% photosphere_logg, m_div_h, b% s2% photosphere_L, ierr)
+         ! write(*,*) safe_log10(b% s2% Teff), b% s2% photosphere_logg, m_div_h, b% s2% photosphere_L
+         write(*,*) 'secondary V band mag = ', abs_mag_V
 
 
          if (b% r(1) > b% rl(1) .and. .not. b% lxtra(ilx_reached_rlo)) then 

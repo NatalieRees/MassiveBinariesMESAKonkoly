@@ -120,9 +120,19 @@
 
   ! resolution
   mesh_delta_coeff = 3d0 ! reduce mesh resolution to speed up run
-  time_delta_coeff = 1.5 !1d0 ! reduce time resolution to speed up run
+  time_delta_coeff = 1.5 ! reduce time resolution to speed up run
   delta_lg_XH_cntr_limit = 0.04d0 ! resolve the TAMS hook slightly better
   varcontrol_target = 5d-3
+
+  ! reduce solver tolerance for faster running
+  use_gold2_tolerances = .false.
+  use_gold_tolerances = .true.
+
+  ! Use scaled corrections to aid the solver
+  scale_max_correction = 0.03d0
+  ignore_min_corr_coeff_for_scale_max_correction = .true.
+  ignore_species_in_max_correction = .true.
+  scale_max_correction_for_negative_surf_lum = .true.
 
   ! always_use_dedt_form_of_energy_eqn = .false.
   fix_eps_grav_transition_to_grid = .true.
