@@ -285,7 +285,7 @@
             return
          end if 
 
-         ! print mass transfer duration
+         ! print mass transfer duration and post-interaction lifetime
          write(*,*) 'Mass transfer duration (yrs) = ', b% xtra(1)
          write(*,*) 'Fraction of total lifetime = ', b% xtra(1)/b% binary_age
          write(*,*) 'Time at the end of RLOF (yrs) = ', b% xtra(2)
