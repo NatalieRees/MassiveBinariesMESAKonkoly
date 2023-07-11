@@ -206,7 +206,7 @@
          write(*,*) 'primary V band mag = ', abs_mag_V_1
          write(*,*) 'secondary V band mag = ', abs_mag_V_2
 
-         ! if post-interaction primary contributes at least 50% of the total flux add time-step to duration
+         ! if post-interaction primary dominates in V band add time-step to duration
          if ((b% r(1) < b% rl(1)) .and. (b% lxtra(ilx_reached_rlo)) &
                .and. (abs_mag_V_1 < abs_mag_V_2)) then 
             b% xtra(5) = b% xtra(5) + b% time_step
