@@ -282,6 +282,7 @@
 
       ! print mass transfer duration
       write(*,*) 'Mass transfer duration (yrs) = ', b% xtra(1)
+      write(*,*) 'Fraction of total lifetime = ', b% xtra(1)/b% binary_age
          
  
       end subroutine extras_binary_after_evolve     
