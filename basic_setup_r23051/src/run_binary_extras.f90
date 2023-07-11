@@ -149,9 +149,12 @@
       
       !Return either keep_going, retry or terminate
       integer function extras_binary_check_model(binary_id)
+         use chem_lib, only : chem_M_div_h
+         use colors_lib, only : get_abs_mag_by_name
          type (binary_info), pointer :: b
          integer, intent(in) :: binary_id
          integer :: ierr
+         real(dp) :: m_div_h, abs_mag_V_1, abs_mag_V_2
          call binary_ptr(binary_id, b, ierr)
          if (ierr /= 0) then ! failure in  binary_ptr
             return
@@ -163,13 +166,49 @@
          ! due to bug with xtra this cannot be put in extras finish step
          if (b% r(1) > b% rl(1)) then 
             b% xtra(1) = b% xtra(1) + b% time_step
-            ! write(*,*) 'dt = ', b% time_step
-            ! write(*,*) 'Mass transfer duration (yrs) = ', b% xtra(1)
+            write(*,*) 'Mass transfer duration (yrs) = ', b% xtra(1)
          end if
 
-         ! if rlof has already occured and primary is no longer filling its roche lobe then mass transfer has finished
-         if (b% r(1) < b% rl(1) .and. b% lxtra(ilx_reached_rlo) .and. (b% xtra(2)==0)) then 
-            b% xtra(2) = b% binary_age
+         ! calculate post-interaction lifetime
+         ! if rlof has already occured and primary not filling RL then add timestep
+         if ((b% r(1) < b% rl(1)) .and. (b% lxtra(ilx_reached_rlo))) then 
+            b% xtra(2) = b% xtra(2) + b% time_step
+            write(*,*) 'Post-interaction duration (yrs) = ', b% xtra(2)
+         end if
+
+         ! use routine from colors/public/colors_lib.f90 to calculate V band magnitude
+
+         ! primary
+         m_div_h = chem_M_div_h(b% s1% X(1), b% s1% Z(1), b% s1% job% initial_zfracs)
+         abs_mag_V_1 = get_abs_mag_by_name('V', safe_log10(b% s1% Teff), &
+               b% s1% photosphere_logg, m_div_h, b% s1% photosphere_L, ierr)
+
+         ! check for extrapolation and use previous known value if happening
+         if (abs_mag_V_1 >100) then 
+            abs_mag_V_1 = b% xtra(3)
+         else
+            b% xtra(3) = abs_mag_V_1
+         end if
+
+         ! secondary
+         m_div_h = chem_M_div_h(b% s2% X(1), b% s2% Z(1), b% s2% job% initial_zfracs)
+         abs_mag_V_2 = get_abs_mag_by_name('V', safe_log10(b% s2% Teff), &
+               b% s2% photosphere_logg, m_div_h, b% s2% photosphere_L, ierr)
+
+         ! check for extrapolation and use previous known value if happening
+         if (abs_mag_V_2 >100) then 
+            abs_mag_V_2 = b% xtra(4)
+         else
+            b% xtra(4) = abs_mag_V_2
+         end if
+         
+         ! print magnitude values
+         write(*,*) 'primary V band mag = ', abs_mag_V_1
+         write(*,*) 'secondary V band mag = ', abs_mag_V_2
+
+         ! if post-interaction primary contributes at least 50% of the total flux add time-step to duration
+         if ((b% r(1) < b% rl(1)) .and. (b% lxtra(ilx_reached_rlo)) .and. (abs_mag_V_1<abs_mag_V_2)) then 
+            b% xtra(5) = b% xtra(5) + b% time_step
          end if
         
       end function extras_binary_check_model
@@ -178,47 +217,14 @@
       ! returns either keep_going or terminate.
       ! note: cannot request retry; extras_check_model can do that.
       integer function extras_binary_finish_step(binary_id)
-         use chem_lib, only : chem_M_div_h
-         use colors_lib, only : get_abs_mag_by_name, get_abs_bolometric_mag, get_bc_by_name
          type (binary_info), pointer :: b
          integer, intent(in) :: binary_id
          integer :: ierr
-         integer :: k
-         real(dp) :: m_div_h, abs_mag_V
-         real(dp) :: test_log_Teff = 2.0, test_logg = 0.0, test_m_div_h = 0.0
          call binary_ptr(binary_id, b, ierr)
          if (ierr /= 0) then ! failure in  binary_ptr
             return
          end if  
          extras_binary_finish_step = keep_going
-
-         !!!!
-         ! V band problems when logg drops below 2.5 but then fine again when Teff drops below 10500
-         ! 10000.0 2.0 -0.5
-         ! 10500.0 2.0 -0.5
-         ! 11000.0 2.5 -0.5
-         ! 10000.0 2.0 -1.0
-         ! 10500.0 2.0 -1.0
-         ! 11000.0 2.5 -1.0
-         !!!!
-
-         ! use routine from colors/public/colors_lib.f90 to calculate V band magnitude
-
-         ! primary
-         k = b% s1% photosphere_cell_k
-         m_div_h = chem_M_div_h(b% s1% X(k), b% s1% Z(k), b% s1% job% initial_zfracs)
-         abs_mag_V = get_abs_mag_by_name('V', safe_log10(b% s1% Teff), &
-               b% s1% photosphere_logg, m_div_h, b% s1% photosphere_L, ierr)
-         ! write(*,*) safe_log10(b% s1% Teff), b% s1% photosphere_logg, m_div_h, b% s1% photosphere_L
-         write(*,*) 'primary V band mag = ', abs_mag_V
-
-         ! secondary
-         k = b% s2% photosphere_cell_k
-         m_div_h = chem_M_div_h(b% s2% X(k), b% s2% Z(k), b% s2% job% initial_zfracs)
-         abs_mag_V = get_abs_mag_by_name('V', safe_log10(b% s2% Teff), &
-               b% s2% photosphere_logg, m_div_h, b% s2% photosphere_L, ierr)
-         ! write(*,*) safe_log10(b% s2% Teff), b% s2% photosphere_logg, m_div_h, b% s2% photosphere_L
-         write(*,*) 'secondary V band mag = ', abs_mag_V
 
 
          if (b% r(1) > b% rl(1) .and. .not. b% lxtra(ilx_reached_rlo)) then 
@@ -288,8 +294,10 @@
          ! print mass transfer duration and post-interaction lifetime
          write(*,*) 'Mass transfer duration (yrs) = ', b% xtra(1)
          write(*,*) 'Fraction of total lifetime = ', b% xtra(1)/b% binary_age
-         write(*,*) 'Time at the end of RLOF (yrs) = ', b% xtra(2)
-         write(*,*) 'Post-interaction lifetime (yrs) = ', b% binary_age-b% xtra(2)
+         write(*,*) 'Post-interaction lifetime (yrs) = ', b% xtra(2)
+         write(*,*) 'Duration of post-interaction phase where primary dominates in the optical (yrs) = ', b% xtra(5)
+         write(*,*) 'Thermal timescale of primary (yrs) = ', b% s1% kh_timescale
+         write(*,*) 'Nuclear timescale of primary (yrs) = ', b% s1% nuc_timescale
          
       end subroutine extras_binary_after_evolve     
       
