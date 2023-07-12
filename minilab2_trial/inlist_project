@@ -5,6 +5,8 @@
 
    evolve_both_stars = .true.
 
+  pgbinary_flag = .true.   
+
 / ! end of binary_job namelist
 
 &binary_controls
@@ -53,4 +55,3 @@
    accretor_overflow_terminate = 1d99 ! something to play with to avoid contact in models with higher accretion efficiency
          
 / ! end of binary_controls namelist
-

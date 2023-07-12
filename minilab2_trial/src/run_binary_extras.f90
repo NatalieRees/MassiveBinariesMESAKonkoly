@@ -36,9 +36,7 @@
       integer, parameter :: ilx_reached_critical = 2
 
       ! There is probably a better-practices way to do this, but I'm starting simple and we can make it more elegant
-      integer, parameter :: accretion_method = 0 !0, 1, 2, 3, 
-      real(dp) :: total_J_accreted = 0d0
-      
+      ! integer, parameter :: accretion_method = 1 !0, 1, 2, 3,       
 
       contains
       
@@ -128,12 +126,19 @@
          integer, intent(out) :: ierr
          logical, intent(in) :: restart
          call binary_ptr(binary_id, b, ierr)
+
+         ! Not necessary, but just in case, if not restart, 
+         ! set xtra(1) = 0, which will be used as the proxy 
+         ! for total AM accreted
+         if (.not. restart) then b% xtra(1)=0d0
+
          if (ierr /= 0) then ! failure in  binary_ptr
             return
          end if
          
 !          b% s1% job% warn_run_star_extras = .false.
           extras_binary_startup = keep_going
+
       end function  extras_binary_startup
       
       integer function extras_binary_start_step(binary_id,ierr)
@@ -172,7 +177,7 @@
          
 
          ! Declare your variables! 
-         real(dp) :: added_angular_momentum, total_Irot, omega_crit
+         ! real(dp) :: added_angular_momentum, total_Irot, omega_crit
          integer :: k, nz
 
          call binary_ptr(binary_id, b, ierr)
@@ -234,15 +239,23 @@
          end if
          
 
+         ! Accretion method. 
+         ! Note that b% does not have an s% x_*ctrl equivalent, so we use the b% s2% double-pointer and put the switch in inlist2
+         ! We can also define this as a global variable, but it's good to call from the inlists in case of restarts. 
+         accretion_method = b% s2% x_integer_ctrl(1) 
+
+         ! For ease of switching methods, 
          select case(accretion_method)
          case(0)
             write(*,*) 'using beta = ', b% mass_transfer_beta, 'from inlists'
          case(1)
             call switch_beta_at_omega_crit(binary_id, ierr)
          case(2)
-            call switch_beta_at_omega_crit_with_AM_loss(binary_id, ierr)
-         case(3)
             call set_beta_based_on_thermal_timescale(binary_id, ierr)
+
+         ! case(3)
+         !    call switch_beta_at_omega_crit_with_AM_loss(binary_id, ierr)
+
          end select 
 
       end function extras_binary_finish_step
@@ -255,13 +268,15 @@
          integer :: ierr
 
          ! Declare your variables! 
-         real(dp) :: added_angular_momentum, total_Irot, omega_crit
+         real(dp) :: added_angular_momentum, total_Irot, omega_crit, Eddington_factor, total_J_accreted
          integer :: k, nz
 
          call binary_ptr(binary_id, b, ierr)
          if (ierr /= 0) then ! failure in  binary_ptr
             return
          end if  
+
+         total_J_accreted = b% xtra(1) ! calling and storing total_J_accreted in a global variable accessible to mesabinary 
 
          ! Implementation for accretion only; if star 2 is losing more mass via winds than it gains, don't add any AM
          if (b% component_mdot(2) > 0) then
@@ -271,13 +286,19 @@
          end if 
 
          total_J_accreted = total_J_accreted + added_angular_momentum
+
+         b% xtra(1) = total_J_accreted ! Update global variable
          
          total_Irot = 0d0
          do k = 1, b% s2% nz
             total_Irot = total_Irot + 2d0/3d0*b% s2% dm(k) * b% s2% r(k) * b% s2% r(k)
          end do 
 
-         omega_crit = sqrt(standard_cgrav * b% s2% mstar/(b% s2% photosphere_r*b% s2% photosphere_r*b% s2% photosphere_r*Rsun*Rsun*Rsun))
+         ! Eddington_factor = 1
+         Eddington_factor = (1-(b% s2% L(1))/(4*pi*standard_cgrav*clight* b% s2% star_mass*Msun/0.34))
+         write(*,*) 'Eddington factor of second star is', Eddington_factor
+
+         omega_crit = sqrt(Eddington_factor * standard_cgrav * b% s2% mstar/(b% s2% photosphere_r * b% s2% photosphere_r * b% s2% photosphere_r*Rsun*Rsun*Rsun))
          
          if (total_J_accreted/total_Irot >= omega_crit) then
             write(*,*) "We have reached super critical rotation ! "   
@@ -288,7 +309,7 @@
          end if 
 
          write(*,*) 'called accretion method 1'
-         write(*,*)  b% mass_transfer_beta
+         write(*,*)  'beta=', b% mass_transfer_beta
 
       end subroutine switch_beta_at_omega_crit
 

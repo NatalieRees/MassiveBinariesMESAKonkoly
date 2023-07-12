@@ -136,6 +136,8 @@
 
       !mixing_regions <integer> ! note: this includes regions where the mixing type is no_mixing.
 
+      mixing_regions 5
+
          ! the <integer> is the number of regions to report
          ! there will be 2*<integer> columns for this in the log file, 2 for each region.
          ! the first column for a region gives the mixing type as defined in const/public/const_def.f90.
@@ -331,6 +333,8 @@
          ! since we start at the center, the bottom of the 1st region is q=0 and top of last is q=1.
 
          ! the columns in the log file will have names like 'burn_type_1' and 'burn_qtop_1'
+         
+         burning_regions 5
          
       !burn_relr_regions <integer>
          ! same as above, but locations given as r/rstar instead of m/mstar.
@@ -568,9 +572,9 @@
 
 !# conditions near center
 
-      !log_center_T ! temperature
-      !log_center_Rho ! density
-      !log_center_P ! pressure
+      log_center_T ! temperature
+      log_center_Rho ! density
+      log_center_P ! pressure
 
       ! shorter names for above
       log_cntr_P

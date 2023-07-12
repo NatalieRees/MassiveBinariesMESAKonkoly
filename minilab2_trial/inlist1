@@ -23,8 +23,9 @@
     new_v_flag = .true.
 
       ! Get pgstar going
-      pgstar_flag = .true.
+      ! pgstar_flag = .true.
 
+    ! pause_before_terminate= .true.
 / ! end of star_job namelist
 
 &eos
@@ -44,6 +45,7 @@
 
 
 &controls
+  
 
   ! Where to put the output files for the star
     log_directory = 'LOGS1'
@@ -164,7 +166,7 @@
     Grid2_plot_colspan(1) = 3 
     Grid2_plot_pad_left(1) = 0.0
     Grid2_plot_pad_right(1) = 0.0
-    Grid2_plot_pad_top(1) = 0.06
+    Grid2_plot_pad_top(1) = 0.11
     Grid2_plot_pad_bot(1) = 0.03
     Grid2_txt_scale_factor(1) = 0.5 
     show_TRho_Profile_legend = .true.      
@@ -185,7 +187,7 @@
     Grid2_plot_colspan(2) = 5
     Grid2_plot_pad_left(2) = 0.0
     Grid2_plot_pad_right(2) = 0.03
-    Grid2_plot_pad_top(2) = 0.05
+    Grid2_plot_pad_top(2) = 0.11
     Grid2_plot_pad_bot(2) = 0.05
     Grid2_txt_scale_factor(2) = 0.5
 
@@ -202,7 +204,7 @@
     Grid2_plot_colspan(3) = 5
     Grid2_plot_pad_left(3) = 0.00
     Grid2_plot_pad_right(3) = 0.02
-    Grid2_plot_pad_top(3) = 0.06
+    Grid2_plot_pad_top(3) = 0.11
     Grid2_plot_pad_bot(3) = 0.05
     Grid2_txt_scale_factor(3) = 0.5
 
@@ -219,7 +221,7 @@
     Grid2_plot_colspan(4) = 2
     Grid2_plot_pad_left(4) = 0.0
     Grid2_plot_pad_right(4) =0.0
-    Grid2_plot_pad_top(4) = 0.05
+    Grid2_plot_pad_top(4) = 0.11
     Grid2_plot_pad_bot(4) = 0.0
     Grid2_txt_scale_factor(4) = 0.14 
     Text_Summary1_num_rows = 12
@@ -246,7 +248,7 @@
     Grid2_plot_colspan(5) = 2
     Grid2_plot_pad_left(5) = 0.0
     Grid2_plot_pad_right(5) =0.0
-    Grid2_plot_pad_top(5) = 0.05
+    Grid2_plot_pad_top(5) = 0.11
     Grid2_plot_pad_bot(5) = 0.0
     Grid2_txt_scale_factor(5) = 0.14 
     Text_Summary2_num_rows = 12
@@ -273,7 +275,7 @@
     Grid2_plot_colspan(6) = 2
     Grid2_plot_pad_left(6) = 0.0
     Grid2_plot_pad_right(6) =0.0
-    Grid2_plot_pad_top(6) = 0.05
+    Grid2_plot_pad_top(6) = 0.11
     Grid2_plot_pad_bot(6) = 0.0
     Grid2_txt_scale_factor(6) = 0.14 
     Text_Summary3_num_rows = 12
@@ -308,7 +310,7 @@
     Grid2_plot_colspan(7) = 4
     Grid2_plot_pad_left(7) = 0.05
     Grid2_plot_pad_right(7) = 0.02
-    Grid2_plot_pad_top(7) = 0.07
+    Grid2_plot_pad_top(7) = 0.11
     Grid2_plot_pad_bot(7) = 0.0
     Grid2_txt_scale_factor(7) = 0.5
     Abundance_legend_txt_scale_factor = 1.0 
@@ -364,7 +366,7 @@
     Grid2_plot_colspan(8) = 4 
     Grid2_plot_pad_left(8) = 0.02
     Grid2_plot_pad_right(8) = 0.03
-    Grid2_plot_pad_top(8) = 0.07
+    Grid2_plot_pad_top(8) = 0.11
     Grid2_plot_pad_bot(8) = 0.05
     Grid2_txt_scale_factor(8) = 0.5
 
