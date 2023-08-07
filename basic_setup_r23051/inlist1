@@ -26,7 +26,7 @@
     
     !custom file 
     color_file_names(1)='fehm050_Av03.HST_WFPC2'
-    color_num_colors(1)=1
+    color_num_colors(1)=13
 
       ! Get pgstar going
       pgstar_flag = .true.
@@ -57,7 +57,7 @@
 
   ! Store the screenlong from the star
     extra_terminal_output_file = 'log1'
- 
+
   ! Settings for saving output and for screenlog
     profile_interval = 10
     history_interval = 1

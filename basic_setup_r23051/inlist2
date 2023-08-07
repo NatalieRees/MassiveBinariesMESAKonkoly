@@ -24,7 +24,7 @@
     
     !custom file 
     color_file_names(1)='fehm050_Av03.HST_WFPC2'
-    color_num_colors(1)=1
+    color_num_colors(1)=13
     
       pgstar_flag = .true.
 
@@ -54,7 +54,7 @@
 
   ! Store the screenlong from the star
     extra_terminal_output_file = 'log2'
- 
+
   ! Settings for saving output and for screenlog
     profile_interval = 10
     history_interval = 1
@@ -139,7 +139,7 @@
     Grid2_num_cols = 16 ! divide plotting region into this many equal width cols
     Grid2_num_plots = 8
     Grid2_num_rows = 9 
-    Grid2_win_width = 26
+    Grid2_win_width = 15!26
     ! Grid2_win_width = 19
     Grid2_win_aspect_ratio = 0.55 ! aspect_ratio = height/width
     Grid2_xleft = 0.04 ! fraction of full window width for margin on left

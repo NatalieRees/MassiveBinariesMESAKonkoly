@@ -1159,7 +1159,7 @@
       !add_bc
 
       ! Adds all the absolute magnitudes to the output
-      !add_abs_mag
+      add_abs_mag
 
       ! Outputs luminosity in filter band ``filter'' (erg s^-1) (case sensitive)
       ! lum_band filter
