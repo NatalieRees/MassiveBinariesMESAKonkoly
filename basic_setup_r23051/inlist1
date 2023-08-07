@@ -22,11 +22,11 @@
     change_v_flag = .true.
     new_v_flag = .true.
 
-    color_num_files=2
-    color_file_names(1) = 'lcb98cor.dat'
-    color_num_colors(1) = 11
-    color_file_names(2)='blackbody_johnson.dat'
-    color_num_colors(2)=5
+    color_num_files=1
+    
+    !custom file 
+    color_file_names(1)='fehm050_Av03.HST_WFPC2'
+    color_num_colors(1)=1
 
       ! Get pgstar going
       pgstar_flag = .true.

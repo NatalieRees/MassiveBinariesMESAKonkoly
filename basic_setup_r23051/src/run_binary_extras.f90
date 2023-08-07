@@ -150,11 +150,14 @@
       !Return either keep_going, retry or terminate
       integer function extras_binary_check_model(binary_id)
          use chem_lib, only : chem_M_div_h
-         use colors_lib, only : get_abs_mag_by_name
+         use colors_lib, only : get_abs_mag_by_name, get_bc_by_name
          type (binary_info), pointer :: b
          integer, intent(in) :: binary_id
          integer :: ierr
-         real(dp) :: m_div_h, abs_mag_V_1, abs_mag_V_2
+         real(dp) :: m_div_h = -0.5
+         real(dp) :: abs_mag_V_1, abs_mag_V_2
+         ! real(dp) :: logTeff, logg, Lum
+         character(len=15) :: mag_band_name = 'WFPC2_F218W'
          call binary_ptr(binary_id, b, ierr)
          if (ierr /= 0) then ! failure in  binary_ptr
             return
@@ -179,28 +182,28 @@
          ! use routine from colors/public/colors_lib.f90 to calculate V band magnitude
 
          ! primary
-         m_div_h = chem_M_div_h(b% s1% X(1), b% s1% Z(1), b% s1% job% initial_zfracs)
-         abs_mag_V_1 = get_abs_mag_by_name('V', safe_log10(b% s1% Teff), &
+         ! m_div_h = chem_M_div_h(b% s1% X(1), b% s1% Z(1), b% s1% job% initial_zfracs)
+         abs_mag_V_1 = get_abs_mag_by_name(mag_band_name, safe_log10(b% s1% Teff), &
                b% s1% photosphere_logg, m_div_h, b% s1% photosphere_L, ierr)
 
-         ! check for extrapolation and use previous known value if happening
-         if (abs_mag_V_1 >100) then 
-            abs_mag_V_1 = b% xtra(3)
-         else
-            b% xtra(3) = abs_mag_V_1
-         end if
+         ! ! check for extrapolation and use previous known value if happening
+         ! if (abs_mag_V_1 >100) then 
+         !    abs_mag_V_1 = b% xtra(3)
+         ! else
+         !    b% xtra(3) = abs_mag_V_1
+         ! end if
 
          ! secondary
-         m_div_h = chem_M_div_h(b% s2% X(1), b% s2% Z(1), b% s2% job% initial_zfracs)
-         abs_mag_V_2 = get_abs_mag_by_name('V', safe_log10(b% s2% Teff), &
+         ! m_div_h = chem_M_div_h(b% s2% X(1), b% s2% Z(1), b% s2% job% initial_zfracs)
+         abs_mag_V_2 = get_abs_mag_by_name(mag_band_name, safe_log10(b% s2% Teff), &
                b% s2% photosphere_logg, m_div_h, b% s2% photosphere_L, ierr)
 
-         ! check for extrapolation and use previous known value if happening
-         if (abs_mag_V_2 >100) then 
-            abs_mag_V_2 = b% xtra(4)
-         else
-            b% xtra(4) = abs_mag_V_2
-         end if
+         ! ! check for extrapolation and use previous known value if happening
+         ! if (abs_mag_V_2 >100) then 
+         !    abs_mag_V_2 = b% xtra(4)
+         ! else
+         !    b% xtra(4) = abs_mag_V_2
+         ! end if
          
          ! print magnitude values
          write(*,*) 'primary V band mag = ', abs_mag_V_1

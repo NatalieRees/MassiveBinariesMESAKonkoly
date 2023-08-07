@@ -19,6 +19,12 @@
     change_initial_v_flag = .true.
     change_v_flag = .true.
     new_v_flag = .true.
+
+    color_num_files=1
+    
+    !custom file 
+    color_file_names(1)='fehm050_Av03.HST_WFPC2'
+    color_num_colors(1)=1
     
       pgstar_flag = .true.
 
