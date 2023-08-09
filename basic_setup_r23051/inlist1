@@ -149,7 +149,7 @@
     Grid2_num_cols = 16 ! divide plotting region into this many equal width cols
     Grid2_num_plots = 8
     Grid2_num_rows = 9 
-    Grid2_win_width = 26
+    Grid2_win_width = 15!26
     ! Grid2_win_width = 19
     Grid2_win_aspect_ratio = 0.55 ! aspect_ratio = height/width
     Grid2_xleft = 0.04 ! fraction of full window width for margin on left
@@ -157,7 +157,7 @@
     Grid2_ybot = 0.02 ! fraction of full window width for margin on bottom
     Grid2_ytop = 0.95 ! fraction of full window width for margin on top
     Grid2_file_flag = .true.
-    Grid2_file_dir = 'png1'
+    Grid2_file_dir = 'png2'
     Grid2_file_prefix = 'Grid2'
     Grid2_file_interval = 30 
     Grid2_file_width = 21
@@ -354,8 +354,8 @@
     History_Panels1_yaxis_name(2) = 'star_mass'
     History_Panels1_other_yaxis_name(2) = 'envelope_mass'
     History_Panels1_yaxis_name(3) = 'radius'
-    History_Panels1_other_yaxis_name(3) = 'rl_1'
-    History_Panels1_yaxis_name(4) = 'v_orb_1'
+    History_Panels1_other_yaxis_name(3) = 'rl_2'
+    History_Panels1_yaxis_name(4) = 'v_orb_2'
     History_Panels1_other_yaxis_name(4) = 'period_days'
     History_Panels1_yaxis_name(5) = 'surface_he4'
     History_Panels1_other_yaxis_name(5) = 'surface_n14'
