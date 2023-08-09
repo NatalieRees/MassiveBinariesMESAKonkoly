@@ -156,7 +156,7 @@
          integer :: ierr
          real(dp) :: m_div_h = -0.5
          real(dp) :: abs_mag_V_1, abs_mag_V_2
-         character(len=15) :: mag_band_name = 'WFPC2_F450W'
+         character(len=15) :: mag_band_name = 'F450W'
          call binary_ptr(binary_id, b, ierr)
          if (ierr /= 0) then ! failure in  binary_ptr
             return

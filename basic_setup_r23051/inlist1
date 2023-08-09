@@ -25,11 +25,12 @@
     color_num_files=1
     
     !custom file 
-    color_file_names(1)='fehm050_Av03.HST_WFPC2'
+    color_file_names(1)='fehm050_Av03_test.HST_WFPC2'
     color_num_colors(1)=13
 
       ! Get pgstar going
       pgstar_flag = .true.
+
 
 / ! end of star_job namelist
 
