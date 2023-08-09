@@ -133,7 +133,7 @@
     Grid2_num_cols = 16 ! divide plotting region into this many equal width cols
     Grid2_num_plots = 8
     Grid2_num_rows = 9 
-    Grid2_win_width = 26
+    Grid2_win_width = 15!26
     ! Grid2_win_width = 19
     Grid2_win_aspect_ratio = 0.55 ! aspect_ratio = height/width
     Grid2_xleft = 0.04 ! fraction of full window width for margin on left
@@ -361,7 +361,6 @@
     Grid2_plot_pad_top(8) = 0.07
     Grid2_plot_pad_bot(8) = 0.05
     Grid2_txt_scale_factor(8) = 0.5
-
 
       
 / ! end of pgstar namelist
