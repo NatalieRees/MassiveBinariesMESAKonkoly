@@ -52,7 +52,7 @@
   ! Settings for saving output and for screenlog
     profile_interval = 10
     history_interval = 1
-    terminal_interval = 1
+    terminal_interval = 10
     write_header_frequency = 10
 
   ! Metallicity
